@@ -1,10 +1,13 @@
 /* This example requires Tailwind CSS v2.0+ */
 import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
+import { useDispatch } from "react-redux";
+import { addOperation } from "../slices/operation_slice";
 
 export default function NewTrans({ open, setOpen, id }) {
   const [quantity, setQuantity] = useState(0);
   const [type, setType] = useState("ENTREE");
+  const dispatch = useDispatch()
 
   const onSelected = (event) => {
     event.preventDefault();
@@ -19,8 +22,11 @@ export default function NewTrans({ open, setOpen, id }) {
       headers: {
         "Content-type": "application/json",
       },
+    }).then((d) => {
+      return d.json()
     })
-      .then(() => {
+      .then((ops) => {
+        dispatch(addOperation(ops))
         setOpen(false);
       })
       .catch((err) => {

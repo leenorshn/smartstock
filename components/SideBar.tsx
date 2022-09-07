@@ -10,7 +10,7 @@ import {
 
 const navigation = [
   { name: "Dashboard", href: "/", icon: HomeIcon, current: true },
-  { name: "Produits", href: "/products", icon: ListBulletIcon, current: false },
+  { name: "Stock", href: "/products", icon: ListBulletIcon, current: false },
   { name: "Ventes", href: "/operations", icon: FolderIcon, current: false },
   { name: "Aide", href: "/help", icon: InformationCircleIcon, current: false },
 ];

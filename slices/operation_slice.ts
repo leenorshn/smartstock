@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
+import { RootState } from "../store";
 
 export interface ProductState {
   _id?: string;
@@ -32,8 +33,10 @@ export const operationSlice = createSlice({
       return (state = [action.payload, ...state]);
     },
     deleteOperation: (state, action: PayloadAction<string>) => {
-      const operations = state.find((p) => p._id !== action.payload);
-      state.push(operations);
+      const operations = state.filter((p) => p._id != action.payload);
+      console.log(operations);
+
+      return (state = [...operations]);
     },
   },
 });
@@ -41,5 +44,18 @@ export const operationSlice = createSlice({
 // Action creators are generated for each case reducer function
 export const { addOperation, deleteOperation, loadOperations } =
   operationSlice.actions;
+
+export const quantity = (state: RootState) => {
+  var t = 0;
+  for (var i = 0; i < state.operation.length; i++) {
+    if (state.operation[i].type == "ENTREE") {
+      t = t + state.operation[i].amount;
+    } else {
+      t = t - state.operation[i].amount;
+    }
+  }
+
+  return t;
+};
 
 export default operationSlice.reducer;

@@ -16,7 +16,7 @@ import DeleteOperationConfirm from "../../../components/DeleteOperationConfirm";
 import TableauOperation from "../../../components/TableauOperation";
 import { useDispatch, useSelector } from "react-redux"
 import { RootState } from "../../../store";
-import { loadOperations } from "../../../slices/operation_slice";
+import { loadOperations, quantity } from "../../../slices/operation_slice";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -30,6 +30,7 @@ export default function Example() {
   const dispatch = useDispatch()
 
   const operations = useSelector((state: RootState) => state.operation);
+  const quantite = useSelector(quantity);
   useEffect(() => {
     loadData();
   }, []);
@@ -44,18 +45,6 @@ export default function Example() {
     dispatch(loadOperations(ops));
   }
 
-  const getActuelQuantity = () => {
-    var t = 0;
-    for (var op = 0; op < operations.length; op++) {
-      if ((operations[op].type = "ENTREE")) {
-        t = t + operations[op].amount;
-      } else {
-        t = t - operations[op].amount;
-      }
-    }
-
-    return t;
-  };
 
   const deleteOp = () => {
     setOpenDeleteOp(true);
@@ -76,7 +65,7 @@ export default function Example() {
             <h1 className="text-xl font-semibold text-gray-900">Produit</h1>
             <h1>
               Quantité :{" "}
-              <span className="text-3xl font-bold">{getActuelQuantity()}</span>
+              <span className="text-3xl font-bold">{quantite}</span>
             </h1>
           </div>
           <div className="flex-1 flex">
@@ -120,7 +109,7 @@ export default function Example() {
         </div>
 
         <div className="-mx-4 mt-10 ring-1 bg-white ring-gray-300 sm:-mx-6 md:mx-0 md:rounded-lg">
-          {operations.length == 0 ? (<>Pas d operation</>) : (
+          {operations.length == 0 ? (<div className="p-8 text-3xl ">Pas d operation</div>) : (
             <table className="min-w-full divide-y divide-gray-300">
               <thead>
                 <tr>
