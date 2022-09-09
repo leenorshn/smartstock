@@ -46,7 +46,7 @@ export const createProduct = async (newProd) => {
   await Operation.create({
     product_id: product._id,
     type: "ENTREE",
-    quantiy: newProd.quantiy,
+    amount: newProd.quantiy,
   });
 
   return product;

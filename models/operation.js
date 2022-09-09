@@ -15,4 +15,4 @@ const Operation =
   mongoose.models.Operation ||
   mongoose.model("Operation", operationSchema, "operations");
 
-module.exports = Operation;
+export default Operation;
