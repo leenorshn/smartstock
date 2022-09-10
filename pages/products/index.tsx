@@ -5,12 +5,13 @@ import { getAllProducts, getProduct } from "./../../utils/product_controller";
 import { useSelector, useDispatch } from "react-redux";
 
 import { RootState } from "../../store";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { loadProducts } from "../../slices/product_slice";
 
 export default function Prducts() {
   const products = useSelector((state: RootState) => state.product);
   const dispatch = useDispatch()
+  const [search, setSearch] = useState("")
 
   useEffect(() => {
     getProduct();
@@ -22,6 +23,8 @@ export default function Prducts() {
 
     dispatch(loadProducts(products))
   }
+
+  const filteredProducts = products.filter((el) => el.code_bar.includes(search));
   return (
     <div className="px-4 sm:px-6 lg:px-8 pt-5">
       <div className="sm:flex sm:items-center">
@@ -34,6 +37,8 @@ export default function Prducts() {
               type="text"
               name="search"
               id="search"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
               placeholder="Rechercher par code-bar"
               className="block w-[500px] rounded-md border-gray-300 pr-12 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
             />
@@ -97,7 +102,7 @@ export default function Prducts() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200 bg-white">
-                  {products.map((product, index) => (
+                  {filteredProducts.map((product, index) => (
                     <tr key={index}>
                       <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-600 sm:pl-6">
                         {product.code_bar}
