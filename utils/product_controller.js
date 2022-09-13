@@ -42,12 +42,21 @@ export const deleteProduct = async (id) => {
 // create product
 export const createProduct = async (newProd) => {
   //await dbConnection();
-  const product = await Product.create(newProd);
-  await Operation.create({
-    product_id: product._id,
-    type: "ENTREE",
-    amount: newProd.quantity,
-  });
+  const prod = await Product.findOne({ code_bar: newProd.code_bar });
 
-  return product;
+  if (prod) {
+    return {
+      error: 400,
+      message: "Ce produit existe deja",
+    };
+  } else {
+    const product = await Product.create(newProd);
+    await Operation.create({
+      product_id: product._id,
+      type: "ENTREE",
+      amount: newProd.quantity,
+    });
+
+    return product;
+  }
 };

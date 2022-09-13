@@ -1,5 +1,6 @@
 /* This example requires Tailwind CSS v2.0+ */
 import { getAllOperation } from "../../../utils/operation_controller";
+import moment from "moment"
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
@@ -190,7 +191,7 @@ export default function Example() {
                           "px-3 py-3.5 text-sm text-gray-500"
                         )}
                       >
-                        <div className="hidden sm:block">{operation.date}</div>
+                        <div className="hidden sm:block">{moment(operation.date).format("DD/MM/YYYY à HH:mm")}</div>
                       </td>
                       <td
                         className={classNames(

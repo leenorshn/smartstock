@@ -5,6 +5,7 @@ import { addProduct, loadProducts } from "../../slices/product_slice";
 
 export default function Example() {
   const dispatch = useDispatch()
+  const [error, setError] = useState('')
   const route = useRouter();
   const [form, setForm] = useState({
     code_bar: "",
@@ -23,10 +24,19 @@ export default function Example() {
         "Content-Type": "application/json",
       },
     });
-    const product = await response.json();
 
-    dispatch(addProduct(product));
-    route.push("/products");
+    if (response.status == 400) {
+      var t = await response.json()
+      console.log(t);
+
+      setError(t);
+    }
+    else {
+      const product = await response.json();
+
+      dispatch(addProduct(product));
+      route.push("/products");
+    }
   };
   return (
     <form className=" px-8 space-y-8 divide-y divide-gray-200">
@@ -153,7 +163,11 @@ export default function Example() {
         </div>
       </div>
 
-      <div className="pt-5">
+      <div className="flex justify-center items-center">
+        <p className="text-red-600 text-md">{error}</p>
+      </div>
+
+      <div className="pt-0">
         <div className="flex justify-center">
           <button
             type="button"

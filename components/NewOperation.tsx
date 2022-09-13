@@ -7,6 +7,7 @@ import { addOperation } from "../slices/operation_slice";
 export default function NewTrans({ open, setOpen, id }) {
   const [quantity, setQuantity] = useState(0);
   const [type, setType] = useState("ENTREE");
+  const [error, setError] = useState('')
   const dispatch = useDispatch()
 
   const onSelected = (event) => {
@@ -14,25 +15,26 @@ export default function NewTrans({ open, setOpen, id }) {
     setType(event.target.value);
   };
 
-  const addOp = (e) => {
+  const addOp = async (e) => {
     e.preventDefault();
-    fetch(`/api/operations/${id}`, {
+    const ops = await fetch(`/api/operations/${id}`, {
       method: "POST",
       body: JSON.stringify({ type, amount: quantity, product_id: id }),
       headers: {
         "Content-type": "application/json",
       },
-    }).then((d) => {
-      return d.json()
-    })
-      .then((ops) => {
-        dispatch(addOperation(ops))
-        setOpen(false);
-      })
-      .catch((err) => {
-        console.log(err);
-        alert(err);
-      });
+    });
+
+    if (ops.status != 201) {
+      setError(await ops.json())
+    } else {
+      const op = await ops.json();
+      dispatch(addOperation(op))
+      setOpen(false);
+    }
+
+
+
   };
 
   return (
@@ -144,7 +146,7 @@ export default function NewTrans({ open, setOpen, id }) {
                   </div>
                 </div>
               </div>
-
+              <div><p>{error}</p></div>
               <div className=" py-4 flex space-x-4 mt-5 sm:mt-6">
                 <button
                   type="button"

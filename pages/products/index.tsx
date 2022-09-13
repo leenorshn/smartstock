@@ -3,6 +3,9 @@ import Link from "next/link";
 import { json } from "stream/consumers";
 import { getAllProducts, getProduct } from "./../../utils/product_controller";
 import { useSelector, useDispatch } from "react-redux";
+import moment from "moment";
+import Moment from "react-moment"
+import useSWR from "swr"
 
 import { RootState } from "../../store";
 import { useEffect, useState } from "react";
@@ -13,18 +16,26 @@ export default function Prducts() {
   const dispatch = useDispatch()
   const [search, setSearch] = useState("")
 
-  useEffect(() => {
-    getProduct();
-  },)
+
+
+
+
 
   async function getProduct() {
     const response = await fetch("/api/products");
     const products = await response.json()
 
     dispatch(loadProducts(products))
+    return products;
   }
 
-  const filteredProducts = products.filter((el) => el.code_bar.includes(search));
+  const { data, error } = useSWR('/api/products', getProduct)
+  if (error) return <div>An error occured.</div>
+  if (!data) return <div>Loading ...</div>
+
+
+
+  const filteredProducts = products.length > 0 ? products.filter((el) => el.code_bar.includes(search)) : [];
   return (
     <div className="px-4 sm:px-6 lg:px-8 pt-5">
       <div className="sm:flex sm:items-center">
@@ -118,7 +129,10 @@ export default function Prducts() {
                         {product.quantity}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-600">
-                        {product.date}
+                        <Moment
+                          format="DD/MM/YYYY à HH:mm"
+                          date={product.date}
+                        ></Moment>
                       </td>
                       <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                         <Link href={`/products/${product._id}`}>
