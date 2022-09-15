@@ -1,14 +1,16 @@
 /* This example requires Tailwind CSS v2.0+ */
 import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { useDispatch } from "react-redux";
-import { addOperation } from "../slices/operation_slice";
+import { useRouter } from "next/router";
+
 
 export default function NewTrans({ open, setOpen, id }) {
   const [quantity, setQuantity] = useState(0);
   const [type, setType] = useState("ENTREE");
   const [error, setError] = useState('')
-  const dispatch = useDispatch()
+
+  const router = useRouter();
+
 
   const onSelected = (event) => {
     event.preventDefault();
@@ -25,12 +27,18 @@ export default function NewTrans({ open, setOpen, id }) {
       },
     });
 
+    console.log(ops);
+
+
     if (ops.status != 201) {
       setError(await ops.json())
+      setOpen(true)
     } else {
       const op = await ops.json();
-      dispatch(addOperation(op))
+      //dispatch(addOperation(op))
+
       setOpen(false);
+      router.reload()
     }
 
 
@@ -146,7 +154,7 @@ export default function NewTrans({ open, setOpen, id }) {
                   </div>
                 </div>
               </div>
-              <div><p>{error}</p></div>
+              <div><p className="text-red-500 text-base text-center">{error}</p></div>
               <div className=" py-4 flex space-x-4 mt-5 sm:mt-6">
                 <button
                   type="button"

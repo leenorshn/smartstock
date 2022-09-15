@@ -3,7 +3,7 @@ import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { useRouter } from "next/router";
 import { useDispatch } from "react-redux"
-import { deleteOperation } from "../slices/operation_slice";
+
 
 export default function DeleteOperationConfirm({ open, setOpen, id }) {
   const route = useRouter();
@@ -13,10 +13,10 @@ export default function DeleteOperationConfirm({ open, setOpen, id }) {
     event.preventDefault();
     await fetch(`/api/operations/ops/${id}`, { method: "DELETE" })
       .then((data) => {
-        console.log(data);
+        //console.log(data);
 
         setOpen(false);
-        dispatch(deleteOperation(id))
+        route.reload()
       })
       .catch((err) => alert(err));
   };

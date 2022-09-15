@@ -29,7 +29,7 @@ export const addOperation = async (data) => {
     await Product.findByIdAndUpdate(product._id, {
       quantity: product.quantity + data.amount,
     });
-    return await Operation.create(data);
+    return await Operation.create({ ...data, date: Date.now() });
   } else {
     if (product.quantity < data.amount) {
       return new Error("Erreur quantite insuffisante");

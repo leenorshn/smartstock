@@ -8,7 +8,7 @@ const operationSchema = new mongoose.Schema({
   },
   type: String,
   amount: { type: Number, required: true, default: 1 },
-  date: { type: Number, required: true, default: Date.now() },
+  date: { type: Number, required: true },
 });
 
 const Operation =
